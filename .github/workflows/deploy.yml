@@ -86,6 +86,20 @@ jobs:
                     <span style="color:#64748b;font-size:0.9rem;">⏳ 即将到来</span>
                   </div>
                 </div>
+                <div class="challenge">
+                  <h2>05 — 闵希豪森男爵 <span class="badge badge-red">🔴 创意</span></h2>
+                  <p>拔着自己头发把自己从沼泽里拽出来 — 经典荒诞故事的叙事动画</p>
+                  <div class="links">
+                    <a href="challenges/05-munchausen/results/claude-opus-4.6/">🤖 Claude Opus 4.6</a>
+                  </div>
+                </div>
+                <div class="challenge">
+                  <h2>06 — 梯云纵 <span class="badge badge-red">🔴 创意</span></h2>
+                  <p>金庸武侠轻功绝技 — 踩着自己的脚凌空上升的水墨风动画</p>
+                  <div class="links">
+                    <a href="challenges/06-tiyunzong/results/claude-opus-4.6/">🤖 Claude Opus 4.6</a>
+                  </div>
+                </div>
               </div>
               <footer>
                 <p><a href="https://github.com/crazynomad/ai-coding-arena">GitHub Repo</a> · Inspired by <a href="https://mp.weixin.qq.com/s/kvhc3xjpBl8Uk4-Yv0-CAw">阮一峰的测评</a></p>
