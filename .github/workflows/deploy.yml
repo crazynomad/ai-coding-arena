@@ -1,0 +1,110 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate index page
+        run: |
+          cat > index.html << 'HTMLEOF'
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>🏟️ AI Coding Arena</title>
+            <style>
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+              .container { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
+              h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+              .subtitle { color: #94a3b8; margin-bottom: 3rem; font-size: 1.1rem; }
+              .challenges { display: grid; gap: 1.5rem; }
+              .challenge { background: #1e293b; border-radius: 12px; padding: 1.5rem; transition: transform 0.2s; }
+              .challenge:hover { transform: translateY(-2px); }
+              .challenge h2 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+              .challenge p { color: #94a3b8; margin-bottom: 1rem; }
+              .links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+              .links a { display: inline-block; padding: 0.5rem 1rem; background: #334155; color: #60a5fa; border-radius: 8px; text-decoration: none; font-size: 0.9rem; transition: background 0.2s; }
+              .links a:hover { background: #475569; }
+              .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem; }
+              .badge-green { background: #166534; color: #4ade80; }
+              .badge-yellow { background: #854d0e; color: #facc15; }
+              .badge-red { background: #991b1b; color: #fca5a5; }
+              footer { margin-top: 3rem; text-align: center; color: #64748b; }
+              footer a { color: #60a5fa; text-decoration: none; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>🏟️ AI Coding Arena</h1>
+              <p class="subtitle">用日常真实编程需求，测试不同 AI 模型的 Agentic Coding 能力</p>
+              <div class="challenges">
+                <div class="challenge">
+                  <h2>01 — 网页重构设计 <span class="badge badge-green">🟢 入门</span></h2>
+                  <p>把简陋的 SaaS 页面重构为专业 Landing Page</p>
+                  <div class="links">
+                    <a href="challenges/01-web-redesign/starter/">📄 原始页面</a>
+                    <a href="challenges/01-web-redesign/results/claude-opus-4.6/">🤖 Claude Opus 4.6</a>
+                  </div>
+                </div>
+                <div class="challenge">
+                  <h2>02 — 3D 太阳系沙盒 <span class="badge badge-red">🔴 硬核</span></h2>
+                  <p>可交互的 3D 天体运动模拟器，带引力曲率可视化</p>
+                  <div class="links">
+                    <a href="challenges/02-3d-solar-system/results/claude-opus-4.6/">🤖 Claude Opus 4.6 v1</a>
+                    <a href="challenges/02-3d-solar-system/results/claude-opus-4.6-v2/">🤖 Claude Opus 4.6 v2</a>
+                  </div>
+                </div>
+                <div class="challenge">
+                  <h2>03 — 愤怒的小鸟 <span class="badge badge-yellow">🟡 进阶</span></h2>
+                  <p>可玩的网页版弹射游戏</p>
+                  <div class="links">
+                    <a href="challenges/03-angry-birds/results/claude-opus-4.6/">🤖 Claude Opus 4.6</a>
+                  </div>
+                </div>
+                <div class="challenge">
+                  <h2>04 — Laravel → Next.js <span class="badge badge-red">🔴 硬核</span></h2>
+                  <p>PHP 项目迁移到 JavaScript 框架</p>
+                  <div class="links">
+                    <span style="color:#64748b;font-size:0.9rem;">⏳ 即将到来</span>
+                  </div>
+                </div>
+              </div>
+              <footer>
+                <p><a href="https://github.com/crazynomad/ai-coding-arena">GitHub Repo</a> · Inspired by <a href="https://mp.weixin.qq.com/s/kvhc3xjpBl8Uk4-Yv0-CAw">阮一峰的测评</a></p>
+              </footer>
+            </div>
+          </body>
+          </html>
+          HTMLEOF
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
