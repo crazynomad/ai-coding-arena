@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Coding Arena</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #06080d;
+      --surface: #0d1117;
+      --surface-hover: #161b22;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text: #e6edf3;
+      --text-muted: #7d8590;
+      --accent: #58a6ff;
+      --accent-dim: rgba(88,166,255,0.12);
+      --green: #3fb950;
+      --yellow: #d29922;
+      --red: #f85149;
+      --purple: #bc8cff;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, rgba(188,140,255,0.04) 40%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      background: var(--accent-dim);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-label .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 0%, #a0aec0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: inline-flex;
+      gap: 2.5rem;
+      padding: 1rem 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .hero-stats .stat {
+      text-align: center;
+    }
+
+    .hero-stats .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .hero-stats .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.15rem;
+    }
+
+    /* Grid */
+    .grid-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .section-header .line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .challenges {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 0.2rem 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+    }
+
+    .card-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .badge-tech { background: rgba(88,166,255,0.12); color: var(--accent); }
+    .badge-game { background: rgba(63,185,80,0.12); color: var(--green); }
+    .badge-narrative { background: rgba(188,140,255,0.12); color: var(--purple); }
+    .badge-migrate { background: rgba(210,153,34,0.12); color: var(--yellow); }
+
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card .desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .card-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.85rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .card-links a:hover {
+      background: var(--accent-dim);
+      border-color: rgba(88,166,255,0.3);
+      color: var(--accent);
+    }
+
+    .card-links .coming {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      opacity: 0.5;
+      font-style: italic;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    /* Mobile */
+    @media (max-width: 720px) {
+      .hero { padding: 4rem 1.5rem 3rem; }
+      .hero-stats { gap: 1.5rem; padding: 0.75rem 1.25rem; }
+      .hero-stats .stat-value { font-size: 1.2rem; }
+      .challenges { grid-template-columns: 1fr; }
+      .grid-section { padding: 1.5rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-label">
+      <span class="dot"></span>
+      6 challenges · 1 model tested
+    </div>
+    <h1>AI <span>Coding</span> Arena</h1>
+    <p>不用学术 benchmark，用真实编程任务和创意挑战，测试 AI 模型到底能不能帮你干活。</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Challenges</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">1</div>
+        <div class="stat-label">Models</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">10+</div>
+        <div class="stat-label">Demos</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-section">
+    <div class="section-header">
+      <h2>Challenges</h2>
+      <span class="line"></span>
+    </div>
+    <div class="challenges">
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-num">01</span>
+          <span class="card-badge badge-tech">Frontend</span>
+        </div>
+        <h3>网页重构设计</h3>
+        <p class="desc">把一个简陋的 SaaS 页面重构为专业级 Landing Page，考验视觉设计和前端功底。</p>
+        <div class="card-links">
+          <a href="challenges/01-web-redesign/starter/">📄 原始页面</a>
+          <a href="challenges/01-web-redesign/results/claude-opus-4.6/">⚡ Opus 4.6</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-num">02</span>
+          <span class="card-badge badge-tech">3D / Physics</span>
+        </div>
+        <h3>3D 太阳系沙盒</h3>
+        <p class="desc">可交互的 3D 天体运动模拟器，N-body 引力计算 + 时空曲率可视化。</p>
+        <div class="card-links">
+          <a href="challenges/02-3d-solar-system/results/claude-opus-4.6/">⚡ Opus 4.6 v1</a>
+          <a href="challenges/02-3d-solar-system/results/claude-opus-4.6-v2/">⚡ Opus 4.6 v2</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-num">03</span>
+          <span class="card-badge badge-game">Game</span>
+        </div>
+        <h3>愤怒的小鸟</h3>
+        <p class="desc">弹弓物理、可破坏方块、计分系统 — 一个完整可玩的网页游戏。</p>
+        <div class="card-links">
+          <a href="challenges/03-angry-birds/results/claude-opus-4.6/">⚡ Opus 4.6</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-num">04</span>
+          <span class="card-badge badge-migrate">Migration</span>
+        </div>
+        <h3>Laravel → Next.js</h3>
+        <p class="desc">将 PHP Laravel 应用完整迁移到 JavaScript Next.js 框架。</p>
+        <div class="card-links">
+          <span class="coming">⏳ Coming soon</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-num">05</span>
+          <span class="card-badge badge-narrative">Narrative</span>
+        </div>
+        <h3>闵希豪森男爵</h3>
+        <p class="desc">拔着自己头发把自己从沼泽里拽出来 — 用动画讲好一个荒诞故事。</p>
+        <div class="card-links">
+          <a href="challenges/05-munchausen/results/claude-opus-4.6/">⚡ Opus 4.6</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-num">06</span>
+          <span class="card-badge badge-narrative">Narrative</span>
+        </div>
+        <h3>梯云纵</h3>
+        <p class="desc">金庸武侠轻功绝技 — 踩着自己的脚凌空上升，水墨风叙事动画。</p>
+        <div class="card-links">
+          <a href="challenges/06-tiyunzong/results/claude-opus-4.6/">⚡ Opus 4.6</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <a href="https://github.com/crazynomad/ai-coding-arena">GitHub</a>
+  </footer>
+
+</body>
+</html>
