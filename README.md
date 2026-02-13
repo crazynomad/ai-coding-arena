@@ -6,8 +6,6 @@
 
 大模型评测总是用学术 benchmark，离普通开发者太远。这个项目用**真实、接地气的编程任务**来测试 AI 模型，看看它们到底能不能帮你干活。
 
-灵感来自[阮一峰的测评文章](https://mp.weixin.qq.com/s/kvhc3xjpBl8Uk4-Yv0-CAw)和 [Alejandro AO 的视频](https://www.youtube.com/watch?v=c31Ow23mErE)。
-
 ## 挑战列表
 
 | # | 挑战 | 描述 | 难度 |
@@ -56,12 +54,6 @@ challenges/XX-name/
 ## 贡献
 
 欢迎提交新的挑战题目或补充模型测试结果！详见 [CONTRIBUTING.md](CONTRIBUTING.md)
-
-## 致谢
-
-- [阮一峰](https://www.ruanyifeng.com/) — 原始测评文章
-- [Alejandro AO](https://www.youtube.com/@alejandro_ao) — 原始测试题目
-- [ruanyf/ai-test-case](https://github.com/ruanyf/ai-test-case) — 提示词和起始文件
 
 ## License
 
